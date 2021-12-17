@@ -9,37 +9,35 @@ class Checkout
   end
 
   def scan(item)
-    basket << item.to_sym
+    basket[item] += 1
   end
 
   def total
     total = 0
-
-    basket.inject(Hash.new(0)) { |items, item| items[item] += 1; items }.each do |item, count|
+    basket.each do |item, quantity|
       if item == :apple || item == :pear
-        if (count % 2 == 0)
-          total += prices.fetch(item) * (count / 2)
+        if (quantity % 2 == 0)
+          total += prices.fetch(item) * (quantity / 2)
         else
-          total += prices.fetch(item) * count
+          total += prices.fetch(item) * quantity
         end
       elsif item == :banana || item == :pineapple
         if item == :pineapple
           total += (prices.fetch(item) / 2)
-          total += (prices.fetch(item)) * (count - 1)
+          total += (prices.fetch(item)) * (quantity - 1)
         else
-          total += (prices.fetch(item) / 2) * count
+          total += (prices.fetch(item) / 2) * quantity
         end
       else
-        total += prices.fetch(item) * count
+        total += prices.fetch(item) * quantity
       end
     end
-
     total
   end
 
   private
 
   def basket
-    @basket ||= Array.new
+    @basket ||= Hash.new(0)
   end
 end
