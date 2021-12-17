@@ -1,3 +1,5 @@
+require 'pry'
+
 class Checkout
   attr_reader :prices
   private :prices
