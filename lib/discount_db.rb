@@ -1,6 +1,6 @@
 module DiscountDb
 
-  DISCOUNT_INFO = {
+  DISCOUNTS = {
     orange: nil,
     apple: 'two_for_one',
     pear: 'two_for_one',

@@ -1,32 +1,38 @@
+require_relative 'discount_db'
 class ItemPricing
 
-  def calculate_price(item, quantity, prices)
-    @item = item
+  def calculate_item_price(item, quantity, price)
+    @discount = DiscountDb::DISCOUNTS[item]
     @quantity = quantity
-    @prices = prices
+    @price = price
 
-    apply_discounts
+    @discount.nil? ? standard_price : apply_discount
   end
 
   private
 
-  def apply_discounts
-    if @item == :apple || @item == :pear
-      if (@quantity % 2 == 0)
-        @prices[@item] * (@quantity / 2)
-      else
-        @prices[@item] * @quantity
-      end
-    elsif @item == :banana || @item == :pineapple
-      if @item == :pineapple
-        price = (@prices[@item] / 2)
-        price += (@prices[@item]) * (@quantity - 1)
-      else
-        (@prices[@item] / 2) * @quantity
-      end
-    else
-      @prices[@item] * @quantity
-    end
+  def apply_discount
+    send @discount
+  end
+
+  def standard_price
+    @price * @quantity
+  end
+
+  def two_for_one
+    @quantity % 2 == 0 ? @price * (@quantity / 2) : standard_price
+  end
+
+  def half_price
+    (@price / 2) * @quantity
+  end
+
+  def half_price_one_only
+    ((@price / 2) + (@price) * (@quantity - 1))
+  end
+
+  def buy_three_one_free
+    @quantity >= 3 ? @price * (@quantity - 1) : standard_price
   end
 
 end

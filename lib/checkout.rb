@@ -15,7 +15,7 @@ class Checkout < ItemPricing
 
   def total
     total = 0
-    basket.map { |item, quantity| total += calculate_price(item, quantity, prices) }
+    basket.map { |item, quantity| total += calculate_item_price(item, quantity, @prices[item]) }
     total
   end
 
