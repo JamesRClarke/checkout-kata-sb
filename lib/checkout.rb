@@ -1,6 +1,7 @@
 require 'pry'
+require_relative 'item_pricing'
 
-class Checkout
+class Checkout < ItemPricing
   attr_reader :prices
   private :prices
 
@@ -14,24 +15,7 @@ class Checkout
 
   def total
     total = 0
-    basket.each do |item, quantity|
-      if item == :apple || item == :pear
-        if (quantity % 2 == 0)
-          total += prices.fetch(item) * (quantity / 2)
-        else
-          total += prices.fetch(item) * quantity
-        end
-      elsif item == :banana || item == :pineapple
-        if item == :pineapple
-          total += (prices.fetch(item) / 2)
-          total += (prices.fetch(item)) * (quantity - 1)
-        else
-          total += (prices.fetch(item) / 2) * quantity
-        end
-      else
-        total += prices.fetch(item) * quantity
-      end
-    end
+    basket.map { |item, quantity| total += calculate_price(item, quantity, prices) }
     total
   end
 
